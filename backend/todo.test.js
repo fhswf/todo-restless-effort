@@ -172,6 +172,105 @@ describe('DELETE /todos/:id', () => {
     });
 });
 
+describe('POST /todos (erweiterte Validierung)', () => {
+    it('sollte einen 400-Fehler zurückgeben, wenn der Titel zu kurz ist', async () => {
+      const newTodo = {
+        "title": "Ab",
+        "due": "2022-11-12T00:00:00.000Z",
+        "status": 0
+      };
+      const response = await request(app)
+        .post('/todos')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newTodo);
+      expect(response.statusCode).toBe(400);
+      expect(response.body.errors).toContainEqual(
+        expect.objectContaining({
+          msg: 'Titel muss mindestens 3 Zeichen lang sein'
+        })
+      );
+    });
+  
+    it('sollte einen 400-Fehler zurückgeben, wenn das Datum ungültig ist', async () => {
+      const newTodo = {
+        "title": "Gültiger Titel",
+        "due": "ungültiges-datum",
+        "status": 0
+      };
+      const response = await request(app)
+        .post('/todos')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newTodo);
+      expect(response.statusCode).toBe(400);
+      expect(response.body.errors).toContainEqual(
+        expect.objectContaining({
+          msg: 'Ungültiges Datum'
+        })
+      );
+    });
+  });
+
+  
+  describe('POST /todos (Grenzwerte)', () => {
+    it('sollte ein Todo mit maximal erlaubter Titellänge erstellen', async () => {
+      const maxTitleLength = 100; // Angenommene maximale Länge
+      const newTodo = {
+        "title": "A".repeat(maxTitleLength),
+        "due": "2022-11-12T00:00:00.000Z",
+        "status": 0
+      };
+      const response = await request(app)
+        .post('/todos')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newTodo);
+      expect(response.statusCode).toBe(201);
+      expect(response.body.title.length).toBe(maxTitleLength);
+    });
+  
+    it('sollte einen 400-Fehler zurückgeben, wenn der Status außerhalb des gültigen Bereichs liegt', async () => {
+      const newTodo = {
+        "title": "Gültiger Titel",
+        "due": "2022-11-12T00:00:00.000Z",
+        "status": 3 // Angenommen, gültige Werte sind 0, 1, 2
+      };
+      const response = await request(app)
+        .post('/todos')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newTodo);
+      expect(response.statusCode).toBe(400);
+      expect(response.body.errors).toContainEqual(
+        expect.objectContaining({
+          msg: 'Ungültiger Status'
+        })
+      );
+    });
+  });
+
+  
+  describe('Datenbankoperationen', () => {
+    it('sollte eine Verbindung zur Datenbank herstellen', async () => {
+      const testDb = new DB();
+      await expect(testDb.connect()).resolves.not.toThrow();
+      await testDb.close();
+    });
+  
+    it('sollte ein Todo in die Datenbank einfügen und wieder abrufen', async () => {
+      const newTodo = {
+        "title": "Test Todo",
+        "due": "2022-11-12T00:00:00.000Z",
+        "status": 0
+      };
+      const insertedTodo = await db.insert(newTodo);
+      expect(insertedTodo._id).toBeDefined();
+  
+      const retrievedTodo = await db.queryById(insertedTodo._id);
+      expect(retrievedTodo).toEqual(expect.objectContaining(newTodo));
+  
+      await db.delete(insertedTodo._id);
+    });
+  });
+
+
 
 afterAll(async () => {
     server.close()
