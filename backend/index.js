@@ -13,7 +13,8 @@ const PORT = process.env.PORT || 3000;
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
 //Starten des Tests über den Befehl: npm run test
-
+// import der Daten aus der Jason-Datei via mongoimport -c todos --jsonArray --file todos.json --db todos
+//löschen aller Daten aus MongoDB: 1: mongosh 2: use todos 3: db.todos.deleteMany({})
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
