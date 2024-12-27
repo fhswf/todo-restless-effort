@@ -45,6 +45,26 @@ describe('Todo App', () => {
       })
     })
   
+    it('should fail to update todo status', () => {
+      // Simuliere einen Serverfehler bei der Statusaktualisierung
+      cy.intercept('PUT', '/todos/*', {
+        statusCode: 500,
+        body: { error: 'Server Error' }
+      }).as('updateStatusError')
+    
+      cy.get('#todo-list .todo').first().within(() => {
+        cy.get('.status').click()
+        cy.wait('@updateStatusError')
+        
+        // Überprüfe, ob der Status unverändert bleibt
+        cy.get('.status').should('not.contain', 'in Bearbeitung')
+      })
+    
+      // Überprüfe, ob eine Fehlermeldung angezeigt wird
+      cy.contains('Fehler beim Aktualisieren des Status').should('be.visible')
+    })
+    
+
     it('should handle API errors gracefully', () => {
       cy.intercept('POST', '/todos', { statusCode: 500, body: { error: 'Server Error' } }).as('createTodoError')
       
