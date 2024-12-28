@@ -107,10 +107,22 @@ const todoValidationRules = [
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
+
+/** Alte Implementierung der authenticate-Middleware
 let authenticate = (req, res, next) => {
     // Dummy authentication
     next();
 }
+*/
+
+let authenticate = (req, res, next) => {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    // Hier können Sie zusätzliche Token-Validierung implementieren
+    next();
+  };
 
 
 /** Return all todos. 
