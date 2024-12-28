@@ -97,10 +97,8 @@ async function initDB() {
 
 const todoValidationRules = [
     check('title')
-        .notEmpty()
-        .withMessage('Titel darf nicht leer sein')
-        .isLength({ min: 3 })
-        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+        .notEmpty().withMessage('Titel darf nicht leer sein')
+        .isLength({ min: 3 }).withMessage('Titel muss mindestens 3 Zeichen lang sein'),
         check('due').isISO8601().withMessage('Ungültiges Datumsformat'),
         check('status').isInt({ min: 0, max: 2 }).withMessage('Status muss 0, 1 oder 2 sein')
 ];
