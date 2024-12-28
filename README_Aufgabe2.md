@@ -40,24 +40,18 @@ Die Integration von Sonarqube war leider nicht möglich. Bei der Erstellung des 
 
 Abschließend eine Übersicht über die vorhandenen Tests. Leider konnten für die fehlgeschlagenen Tests keine Lösungen gefunden werden. Hauptsächlich waren Validierungsregeln von den Tests betroffen, die nach unserert Meinung korrekt implementiert sein sollten, aber trotz dessen nicht korrekt ausgeführt bzw. erfolgreich getestet werden konnten.
 
-GET /todos (unautorisiert)
-    ✓ sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird (11 ms)
-  GET /todos
-    ✓ sollte alle Todos abrufen (14 ms)
-  POST /todos
-    ✓ sollte ein neues Todo erstellen (17 ms)
-    ✓ sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist (4 ms)
-    ✕ sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist (7 ms)
-  GET /todos/:id
-    ✓ sollte ein Todo abrufen (8 ms)
-    ✓ sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde (14 ms)
-  PUT /todos/:id
-    ✓ sollte ein Todo aktualisieren (9 ms)
-  DELETE /todos/:id
-    ✓ sollte ein Todo löschen (12 ms)
-  POST /todos (erweiterte Validierung)
-    ✕ sollte einen 400-Fehler zurückgeben, wenn der Titel zu kurz ist (3 ms)
-    ✕ sollte einen 400-Fehler zurückgeben, wenn das Datum ungültig ist (3 ms)
-  POST /todos (Grenzwerte)
-    ✓ sollte ein Todo mit maximal erlaubter Titellänge erstellen (5 ms)
-    ✕ sollte einen 400-Fehler zurückgeben, wenn der Status außerhalb des gültigen Bereichs liegt (3 ms)
+| Test Description | Result | Time (ms) |
+|------------------|--------|-----------|
+| GET /todos (unautorisiert): sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird | ✓ | 11 |
+| GET /todos: sollte alle Todos abrufen | ✓ | 14 |
+| POST /todos: sollte ein neues Todo erstellen | ✓ | 17 |
+| POST /todos: sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist | ✓ | 4 |
+| POST /todos: sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist | ✕ | 7 |
+| GET /todos/:id: sollte ein Todo abrufen | ✓ | 8 |
+| GET /todos/:id: sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde | ✓ | 14 |
+| PUT /todos/:id: sollte ein Todo aktualisieren | ✓ | 9 |
+| DELETE /todos/:id: sollte ein Todo löschen | ✓ | 12 |
+| POST /todos (erweiterte Validierung): sollte einen 400-Fehler zurückgeben, wenn der Titel zu kurz ist | ✕ | 3 |
+| POST /todos (erweiterte Validierung): sollte einen 400-Fehler zurückgeben, wenn das Datum ungültig ist | ✕ | 3 |
+| POST /todos (Grenzwerte): sollte ein Todo mit maximal erlaubter Titellänge erstellen | ✓ | 5 |
+| POST /todos (Grenzwerte): sollte einen 400-Fehler zurückgeben, wenn der Status außerhalb des gültigen Bereichs liegt | ✕ | 3 |
