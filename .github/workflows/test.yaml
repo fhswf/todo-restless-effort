@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name npm install
+      - name: npm install
         working-directory: ./backend
         run: npm install
       - name: Run tests
