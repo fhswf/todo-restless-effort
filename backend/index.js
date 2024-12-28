@@ -101,6 +101,8 @@ const todoValidationRules = [
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+        check('due').isISO8601().withMessage('Ungültiges Datumsformat'),
+        check('status').isInt({ min: 0, max: 2 }).withMessage('Status muss 0, 1 oder 2 sein')
 ];
 
 
@@ -281,8 +283,12 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules,
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: 'Bad Request', details: errors.array() });
+        }
         let todo = req.body;
         if (!todo) {
             res.sendStatus(400, { message: "Todo fehlt" });
