@@ -1,3 +1,8 @@
+# Gruppenteilnehmer:
+- 30252910
+- 30245851
+- 30248849
+
 # Vorgehensweise
 - Erstellung von Testfällen für das Frontened
 - Erstellung von Testfällen für das Backend
