@@ -290,9 +290,8 @@ app.post('/todos', authenticate, todoValidationRules,
             return res.status(400).json({ error: 'Bad Request', details: errors.array() });
         }
         let todo = req.body;
-        if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
-            return;
+        if (!todo || !todo.title || !todo.due || todo.status === undefined) {
+            return res.sendStatus(400).json({ error: 'Bad Request', message: "Ungültige Todo-Daten"});
         }
         return db.insert(todo)
             .then(todo => {
