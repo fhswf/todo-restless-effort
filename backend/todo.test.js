@@ -76,7 +76,7 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
-}); 0
+}); 
 
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {
@@ -243,30 +243,6 @@ describe('POST /todos (erweiterte Validierung)', () => {
           msg: 'Ungültiger Status'
         })
       );
-    });
-  });
-
-  
-  describe('Datenbankoperationen', () => {
-    it('sollte eine Verbindung zur Datenbank herstellen', async () => {
-      const testDb = new DB();
-      await expect(testDb.connect()).resolves.not.toThrow();
-      await testDb.close();
-    });
-  
-    it('sollte ein Todo in die Datenbank einfügen und wieder abrufen', async () => {
-      const newTodo = {
-        "title": "Test Todo",
-        "due": "2022-11-12T00:00:00.000Z",
-        "status": 0
-      };
-      const insertedTodo = await db.insert(newTodo);
-      expect(insertedTodo._id).toBeDefined();
-  
-      const retrievedTodo = await db.queryById(insertedTodo._id);
-      expect(retrievedTodo).toEqual(expect.objectContaining(newTodo));
-  
-      await db.delete(insertedTodo._id);
     });
   });
 

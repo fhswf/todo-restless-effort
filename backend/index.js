@@ -99,20 +99,32 @@ async function initDB() {
 
 const todoValidationRules = [
     check('title')
-        .notEmpty()
-        .withMessage('Titel darf nicht leer sein')
-        .isLength({ min: 3 })
-        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+        .notEmpty().withMessage('Titel darf nicht leer sein')
+        .isLength({ min: 3 }).withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+        check('due').isISO8601().withMessage('Ungültiges Datumsformat'),
+        check('status').isInt({ min: 0, max: 2 }).withMessage('Status muss 0, 1 oder 2 sein')
 ];
 
 
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
+
+/** Alte Implementierung der authenticate-Middleware
 let authenticate = (req, res, next) => {
     // Dummy authentication
     next();
 }
+*/
+
+let authenticate = (req, res, next) => {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    // Hier können Sie zusätzliche Token-Validierung implementieren
+    next();
+  };
 
 
 /** Return all todos. 
@@ -271,12 +283,15 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules,
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: 'Bad Request', details: errors.array() });
+        }
         let todo = req.body;
-        if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
-            return;
+        if (!todo || !todo.title || !todo.due || todo.status === undefined) {
+            return res.sendStatus(400).json({ error: 'Bad Request', message: "Ungültige Todo-Daten"});
         }
         return db.insert(todo)
             .then(todo => {
