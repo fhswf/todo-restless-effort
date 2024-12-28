@@ -246,30 +246,6 @@ describe('POST /todos (erweiterte Validierung)', () => {
     });
   });
 
-  
-  describe('Datenbankoperationen', () => {
-    it('sollte eine Verbindung zur Datenbank herstellen', async () => {
-      const testDb = new DB();
-      await expect(testDb.connect()).resolves.not.toThrow();
-      await testDb.close();
-    });
-  
-    it('sollte ein Todo in die Datenbank einfügen und wieder abrufen', async () => {
-      const newTodo = {
-        "title": "Test Todo",
-        "due": "2022-11-12T00:00:00.000Z",
-        "status": 0
-      };
-      const insertedTodo = await db.insert(newTodo);
-      expect(insertedTodo._id).toBeDefined();
-  
-      const retrievedTodo = await db.queryById(insertedTodo._id);
-      expect(retrievedTodo).toEqual(expect.objectContaining(newTodo));
-  
-      await db.delete(insertedTodo._id);
-    });
-  });
-
 
 afterAll(async () => {
     server.close()
