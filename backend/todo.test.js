@@ -76,7 +76,7 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
-}); 0
+}); 
 
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {
